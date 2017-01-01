@@ -1,6 +1,25 @@
 #include <cstdio>
 #include <cstdlib>
 #include <string>
+#include <cstring>
+
+#define LINUX
+#ifdef LINUX
+
+#define INVALID_SOCKET (SOCKET)(~0)
+#define SOCKET_ERROR (-1)
+
+#include <unistd.h>
+#include <errno.h>
+#include <netdb.h>
+#include <sys/types.h>
+#include <netinet/in.h>
+#include <sys/socket.h>
+#include <arpa/inet.h>>
+
+typedef int SOCKET;
+
+#endif
 
 using namespace std;
 
@@ -9,7 +28,7 @@ typedef unsigned char byte;
 const int DATA_LENGTH = 1024;
 
 
-#define WINDOWS
+//#define WINDOWS
 #ifdef WINDOWS
 
 #include<winsock2.h>

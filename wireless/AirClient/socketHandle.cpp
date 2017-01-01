@@ -8,8 +8,9 @@
 bool InitializeLink(Address addr, SOCKET* connectSocket)
 {
 	//initialize winsock
+	#ifdef WINDOWS
 	WSAHandle::Initialize();
-
+	#endif
 
 	struct addrinfo *result = NULL,
 		*ptr = NULL,
@@ -40,7 +41,7 @@ bool InitializeLink(Address addr, SOCKET* connectSocket)
 			ptr->ai_protocol);
 
 		if (*connectSocket == INVALID_SOCKET) {
-			printf("socket failed with error: %ld\n", WSAGetLastError());
+			//printf("socket failed with error: %ld\n", WSAGetLastError());
 
 			return false;
 		}
@@ -49,7 +50,14 @@ bool InitializeLink(Address addr, SOCKET* connectSocket)
 		iResult = connect(*connectSocket, ptr->ai_addr, (int)ptr->ai_addrlen);
 
 		if (iResult == SOCKET_ERROR) {
+			#ifdef WINDOWS
 			closesocket(*connectSocket);
+			#endif
+
+			#ifdef LINUX
+			close(*connectSocket);
+			#endif
+			
 			*connectSocket = INVALID_SOCKET;
 			continue;
 		}
@@ -102,6 +110,16 @@ bool Recieve(string& message, int size, SOCKET connectSocket)
 void CloseLink(SOCKET connectSocket)
 {
 	// cleanup
+
+	#ifdef WINDOWS
 	closesocket(connectSocket);
+	#endif
+
+	#ifdef LINUX
+	close(connectSocket);
+	#endif
+	
+	#ifdef WINDOWS
 	WSAHandle::Finialize();
+	#endif
 }
