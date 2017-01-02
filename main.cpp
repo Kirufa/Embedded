@@ -1,6 +1,6 @@
-#include "wireless/AirClient/SocketHandle.h"
-#include "BBB_I2C.h"
-#include "MPU6050.h"
+#include <socketHandle.h>
+#include <BBB_I2C.h>
+#include <MPU6050.h>
 
 #include <iostream>
 #include <cstdio>
@@ -13,13 +13,13 @@ using namespace std;
 MPU6050 MPU;
 BBB_I2C BBB_I2C;
 SOCKET ep;
-pthread* thread;
+pthread_t* thread;
 
 bool run = true;
 bool isSend;
 
 void process(int);
-void sendI2C();
+void* sendI2C(void*);
 
 int main()
 {
@@ -49,7 +49,7 @@ int main()
 	return 0;
 }
 
-void sendI2C()
+void* sendI2C(void* par)
 {
 	int16_t data[6];
 
@@ -63,7 +63,7 @@ void sendI2C()
 
 		gram.Type = 1;
 		gram.DataLength = sizeof(int16_t)*6;
-		memcpy(gra.Data, data, sizeof(data));
+		memcpy(gram.Data, data, sizeof(data));
 
 		Send(gram,ep);
 	}
@@ -77,8 +77,8 @@ void process(int inst,vector<int> data)
 	{
 		case 2:	//i2c data require
 			isSend = true;
-			thread = new pthread;
-			pthread_create(&thread, NULL, sendI2C, 0);
+			thread = new pthread_t;
+			pthread_create(thread, NULL, sendI2C, NULL);
 
 			break;
 		case 4: //pwm set
@@ -86,7 +86,7 @@ void process(int inst,vector<int> data)
 			break;
 		case 6:	//i2c data stop
 			isSend = false;
-     		pthread_join(thread, NULL);
+     		pthread_join(*thread, NULL);
      		delete thread;
 			break;
 

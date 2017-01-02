@@ -3,7 +3,7 @@
 #include <string>
 #include <cstring>
 
-//#define LINUX
+#define LINUX
 #ifdef LINUX
 
 #define INVALID_SOCKET (SOCKET)(~0)
@@ -15,7 +15,7 @@
 #include <sys/types.h>
 #include <netinet/in.h>
 #include <sys/socket.h>
-#include <arpa/inet.h>>
+#include <arpa/inet.h>
 
 typedef int SOCKET;
 
@@ -28,7 +28,7 @@ typedef unsigned char byte;
 const int DATA_LENGTH = 128;
 
 
-#define WINDOWS
+//#define WINDOWS
 #ifdef WINDOWS
 
 #include<winsock2.h>
