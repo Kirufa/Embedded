@@ -47,6 +47,12 @@ namespace AirServer.Main
                 case "e":
                     inst = Instruction.End;
                     break;
+                case "si2c":
+                    inst = Instruction.StartI2C;
+                    break;
+                case "ei2c":
+                    inst = Instruction.EndI2C;
+                    break;
                 default:
                     inst = Instruction.None;
                     break;
@@ -61,13 +67,23 @@ namespace AirServer.Main
 
         private static void processInst(Instruction inst)
         {
-            switch(inst)
+            DataGram gram = new DataGram();
+
+            switch (inst)
             {               
                 case Instruction.Initialize:
                     SocketData.Server.InitialTCPServer();
                     break;
                 case Instruction.End:
                     runningFlag = false;
+                    break;
+                case Instruction.StartI2C:                  
+                    gram.Type = 2;
+                    SocketData.Client[0].TCPSend(gram);
+                    break;
+                case Instruction.EndI2C:                  
+                    gram.Type = 6;
+                    SocketData.Client[0].TCPSend(gram);
                     break;
                 default:
                 case Instruction.None:
@@ -82,7 +98,9 @@ namespace AirServer.Main
         Stop,
         Initialize,
         None,
-        End
+        End,
+        StartI2C,
+        EndI2C
     }
     
 }

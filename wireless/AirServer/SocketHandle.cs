@@ -6,6 +6,7 @@ using System.Net.Sockets;
 using System.Threading;
 using System.IO;
 using System.Xml.Serialization;
+using System.Runtime.InteropServices;
 
 
 
@@ -19,15 +20,16 @@ namespace AirServer.MySocket
         public byte[] Data = new byte[SocketData.MAX_DATASIZE];
         public int DataLength;
         public int Type;
-        //0: check alive, client <-> server
-        //1: TCP Text Data, client -> server 
-        //2: TCP Text Data, server -> client 
-        //3: TCP UDP Image Size, follow the UDP Image, client -> server 
-        //4: TCP UDP Image Size, follow the UDP Image, server -> client
-        //5: UDP Image, client -> server
-        //6: UDP Image, server -> client
-        //7: TCP send Name client -> server
-        //20: TCP System message server -> client
+        
+        //1 client->server i2c data
+        //2 server->client i2c data require
+        //3 ---
+        //4 server->client pwm set
+        //5 ---
+        //6 server->client i2c data stop
+
+        //i2c data: (ax ay az)(gx gy gz)
+        //pwm data: (num period duty)
     }
 
     public static class SocketData
@@ -57,7 +59,7 @@ namespace AirServer.MySocket
 
             //other
             private int ListenCount = MAX_LISTEN_SIZE;
-            public static string ServerIP = "192.168.0.106";
+            public static string ServerIP = "192.168.1.101";
             private bool AcceptRunning = true;
 
 
@@ -164,55 +166,36 @@ namespace AirServer.MySocket
             private void Receive_Thread_Run()
             {
                 while (ReceiveRunning)
-                {
-                   // //send to all online member
-                   // DataGram _Temp = new DataGram();
-                   // byte[] _Arr = new byte[RECEIVE_LENGTH];
-                   // byte[] _Len = new byte[4];
-                   // int RecvSize;
-                   // try
-                   // {
-                   //     TCP_Client.Receive(_Len, 4, SocketFlags.None);
-                   //     Thread.Sleep(THREAD_SLEEP_TIME);
-                   //     RecvSize = TCP_Client.Receive(_Arr, BitConverter.ToInt32(_Len, 0), SocketFlags.None);
-                   //     Thread.Sleep(THREAD_SLEEP_TIME);
-                   // }
-                   // catch (Exception ex)
-                   // {
-                   //     Form_Server.AddText(Name, ID.ToString(), "Except", ex.ToString());
-                   //     break;
-                   // }
-                   //
-                   // _Temp = Socket.ByteToDgram(_Arr, RecvSize);
-                   // switch (_Temp.Type)
-                   // {
-                   //     case 0:
-                   //         break;
-                   //     case 1:
-                   //         string _Str = ByteToStr(_Temp.Data, _Temp.DataLength);
-                   //         Form_Server.AddText(Name, ID.ToString(), "Recieve", _Str);
-                   //         _Temp.Type = 2;
-                   //         SocketHandle.SendToAllClient(_Temp, false);
-                   //
-                   //         break;
-                   //     case 3:
-                   //         //  MessageBox.Show(_Temp.Type.ToString());                    
-                   //         // int _N = Convert.ToInt32(ByteToStr(_Temp.Data, _Temp.DataLength));
-                   //         //MessageBox.Show();
-                   //         SocketHandle.ReSendBitmap(_Temp, this.TCP_Client);
-                   //         break;
-                   //     case 5:
-                   //         break;
-                   //     case 7:
-                   //         string _Str2 = ByteToStr(_Temp.Name, _Temp.NameLength);
-                   //         this.Name = _Str2;
-                   //         Form_Server.AddText(Name, ID.ToString(), "Name", "Recieve Name.");
-                   //         _Temp.Type = 20;
-                   //         SocketHandle.SendToAllClient(_Temp, false);
-                   //         break;
-                   //     default:
-                   //         break;
-                   // }
+                {                
+                    DataGram _Temp = new DataGram();
+                    byte[] _Arr = new byte[MAX_DATASIZE * sizeof(byte) + 2 * sizeof(int)];
+                    
+             
+                    try
+                    {
+                        TCP_Client.Receive(_Arr, _Arr.Length, SocketFlags.None);
+                    }
+                    catch (Exception ex)
+                    {             
+                        break;
+                    }
+                   
+                    _Temp = SocketHandle.ByteToDgram(_Arr, _Arr.Length);
+                    switch (_Temp.Type)
+                    {
+                        case 1:
+                            Int16[] data = new short[6];
+                            for (int i = 0; i != 6; ++i)
+                                BitConverter.ToInt16(_Temp.Data, i * sizeof(Int16));
+
+                            Console.WriteLine(
+                                "ax={0} ay={1} az={2} , gx={3} gy={4} gz={5}",
+                                data[0], data[1], data[2], data[3], data[4], data[5]);
+
+                            break;
+                        default:
+                            break;
+                    }
                 }
             }
         }

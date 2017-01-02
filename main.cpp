@@ -18,7 +18,7 @@ pthread_t* thread;
 bool run = true;
 bool isSend;
 
-void process(int);
+void process(DataGram);
 void* sendI2C(void*);
 
 int main()
@@ -28,21 +28,28 @@ int main()
 		printf ("Device ID not match!\n");
 		exit(1);
 	}
+	puts("MPU6050 connect successful.");
 		
 	if (MPU.initialize() < 1) 
 	{
 		printf ("MPU initialize fail!\n");
 		exit(1);
 	}
+	puts("MPU6050 initialize successful.");
 
 	if(!InitializeLink(Address("192.168.1.101", "61357"), &ep))
 	{
 		printf("Wireless network initialize fail!\n");
 		exit(1);
 	}
+	puts("Wireless network initialize successful.");
 
 	while(run)
 	{
+		DataGram gram;
+		Recieve(gram, ep);
+
+		process(gram);
 
 	}
 
@@ -71,8 +78,10 @@ void* sendI2C(void* par)
 }
 
 
-void process(int inst,vector<int> data)
+void process(DataGram gram)
 {
+	int inst = gra.Type;
+
 	switch(inst)
 	{
 		case 2:	//i2c data require
