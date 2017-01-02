@@ -64,7 +64,11 @@ void* sendI2C(void* par)
 		MPU.getMotion6(
 			&data[0], &data[1], &data[2], 
 			&data[3], &data[4], &data[5]);
-		
+
+		printf("ax = %d,ay = %d,az = %d,gx = %d,gy = %d,gz = %d\n",
+			data[0],data[1],data[2],data[3],data[4],data[5]);	
+
+
 		DataGram gram;
 
 		gram.Type = 1;
@@ -72,6 +76,8 @@ void* sendI2C(void* par)
 		memcpy(gram.Data, data, sizeof(data));
 
 		Send(gram,ep);
+
+		usleep(500);
 	}
 
 }
@@ -81,7 +87,7 @@ void process(DataGram gram)
 {
 	int inst = gram.Type;
 
-	printf("type = %d\n",gram.Type);
+	//printf("type = %d\n",gram.Type);
 
 	switch(inst)
 	{
