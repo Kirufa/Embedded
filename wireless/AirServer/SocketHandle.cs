@@ -16,10 +16,10 @@ namespace AirServer.MySocket
     
     [Serializable]
     public class DataGram
-    {       
-        public byte[] Data = new byte[SocketData.MAX_DATASIZE];
-        public int DataLength;
+    {        
         public int Type;
+        public int DataLength;
+        public byte[] Data = new byte[SocketData.MAX_DATASIZE];
         
         //1 client->server i2c data
         //2 server->client i2c data require
@@ -29,7 +29,7 @@ namespace AirServer.MySocket
         //6 server->client i2c data stop
 
         //i2c data: (ax ay az)(gx gy gz)
-        //pwm data: (num period duty)
+        //pwm data: (num period duty)     
     }
 
     public static class SocketData
@@ -218,28 +218,27 @@ namespace AirServer.MySocket
 
         public static byte[] DgramToByte(DataGram dgram)
         {
-            MemoryStream _Ms = new MemoryStream();
-            XmlSerializer _Xs = new XmlSerializer(typeof(DataGram));
-            _Xs.Serialize(_Ms, dgram);
-            return _Ms.ToArray();
+            List<byte> byteLst = new List<byte>();
+            byteLst.AddRange(BitConverter.GetBytes(dgram.Type));
+            byteLst.AddRange(BitConverter.GetBytes(dgram.DataLength));
+            byteLst.AddRange(dgram.Data);
+
+            return byteLst.ToArray();
         }
 
         public static DataGram ByteToDgram(byte[] _Arr, int _Len)
         {
-            MemoryStream _Ms = new MemoryStream(_Arr, 0, _Len);
-            XmlSerializer _Xs = new XmlSerializer(typeof(DataGram));
-            //  MessageBox.Show(_Ms.ToArray().Length.ToString());
-            /*
-            using (FileStream fs = new FileStream("123.xml", FileMode.Create))
-            {
-                fs.Write(_Ms.ToArray(), 0, (int)_Ms.Length);
-                fs.Close();
-            }
-            */
+            int index = 0;
 
+            DataGram dgram = new DataGram();
 
-            DataGram _Ret = (DataGram)_Xs.Deserialize(_Ms);
-            return _Ret;
+            dgram.Type = BitConverter.ToInt32(_Arr, index);
+            index += sizeof(int);
+            dgram.DataLength = BitConverter.ToInt32(_Arr, index);
+            index += sizeof(int);
+            Array.Copy(_Arr, index, dgram.Data, 0, dgram.Data.Length);
+
+            return dgram;
         }
     }
 

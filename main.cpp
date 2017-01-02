@@ -48,7 +48,6 @@ int main()
 	{
 		DataGram gram;
 		Recieve(gram, ep);
-
 		process(gram);
 
 	}
@@ -82,6 +81,8 @@ void process(DataGram gram)
 {
 	int inst = gram.Type;
 
+	printf("type = %d\n",gram.Type);
+
 	switch(inst)
 	{
 		case 2:	//i2c data require
@@ -102,6 +103,8 @@ void process(DataGram gram)
 			isSend = false;
      		pthread_join(*thread, NULL);
      		delete thread;
+			break;
+		default:
 			break;
 
 	}
