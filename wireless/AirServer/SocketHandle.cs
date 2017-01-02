@@ -34,7 +34,7 @@ namespace AirServer.MySocket
 
     public static class SocketData
     {
-        public const int MAX_DATASIZE = 192;
+        public const int MAX_DATASIZE = 120;
 
         //TCP
         public static ServerData Server = new ServerData();
@@ -152,7 +152,7 @@ namespace AirServer.MySocket
 
                 try
                 {
-                   
+               
                     TCP_Client.Send(_Arr, _Arr.Length, SocketFlags.None);
                     //Thread.Sleep(SocketData.THREAD_SLEEP_TIME);
                 }

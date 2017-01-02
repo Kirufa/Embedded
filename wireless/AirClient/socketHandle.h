@@ -25,7 +25,7 @@ using namespace std;
 
 typedef unsigned char byte;
 
-const int DATA_LENGTH = 192;
+const int DATA_LENGTH = 120;
 
 
 //#define WINDOWS

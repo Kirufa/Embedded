@@ -106,7 +106,7 @@ bool Recieve(DataGram& gram, SOCKET connectSocket)
 	puts("recv end.");
 
 	if (iResult > 0)
-		memcpy(recvbuf, &gram, sizeof(DataGram));
+		memcpy(&gram, recvbuf, sizeof(DataGram));
 
 	delete [] recvbuf;
 
