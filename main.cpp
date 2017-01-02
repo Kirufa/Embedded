@@ -85,6 +85,9 @@ void process(DataGram gram)
 	switch(inst)
 	{
 		case 2:	//i2c data require
+
+			puts("i2c data required.");
+
 			isSend = true;
 			thread = new pthread_t;
 			pthread_create(thread, NULL, sendI2C, NULL);
@@ -94,6 +97,8 @@ void process(DataGram gram)
 
 			break;
 		case 6:	//i2c data stop
+			puts("i2c data stopped.");
+
 			isSend = false;
      		pthread_join(*thread, NULL);
      		delete thread;
