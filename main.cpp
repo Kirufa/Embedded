@@ -35,7 +35,7 @@ int main()
 		exit(1);
 	}
 
-	if(!InitializeLink(Address("192.168.0.106", "61357"), &ep))
+	if(!InitializeLink(Address("192.168.1.101", "61357"), &ep))
 	{
 		printf("Wireless network initialize fail!\n");
 		exit(1);
