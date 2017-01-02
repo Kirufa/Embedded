@@ -34,7 +34,7 @@ namespace AirServer.MySocket
 
     public static class SocketData
     {
-        public const int MAX_DATASIZE = 128;
+        public const int MAX_DATASIZE = 192;
 
         //TCP
         public static ServerData Server = new ServerData();
