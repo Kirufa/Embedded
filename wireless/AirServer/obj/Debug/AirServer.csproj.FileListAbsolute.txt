@@ -4,3 +4,6 @@ c:\users\ntpunsl-p35\documents\visual studio 2015\Projects\AirServer\bin\Debug\A
 c:\users\ntpunsl-p35\documents\visual studio 2015\Projects\AirServer\obj\Debug\AirServer.exe
 c:\users\ntpunsl-p35\documents\visual studio 2015\Projects\AirServer\obj\Debug\AirServer.pdb
 C:\Users\NTPUNSL-P35\documents\visual studio 2015\Projects\AirServer\bin\Debug\AirServer.exe.config
+E:\GIT2\Imbedded\wireless\AirServer\bin\Debug\AirServer.exe.config
+E:\GIT2\Imbedded\wireless\AirServer\obj\Debug\AirServer.exe
+E:\GIT2\Imbedded\wireless\AirServer\obj\Debug\AirServer.pdb

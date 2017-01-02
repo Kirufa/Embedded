@@ -3,7 +3,7 @@
 #include <string>
 #include <cstring>
 
-#define LINUX
+//#define LINUX
 #ifdef LINUX
 
 #define INVALID_SOCKET (SOCKET)(~0)
@@ -25,10 +25,10 @@ using namespace std;
 
 typedef unsigned char byte;
 
-const int DATA_LENGTH = 1024;
+const int DATA_LENGTH = 128;
 
 
-//#define WINDOWS
+#define WINDOWS
 #ifdef WINDOWS
 
 #include<winsock2.h>
@@ -75,15 +75,27 @@ public:
 	Address(string ip, string port) :IP(ip), Port(port) {}
 };
 
-typedef struct SocketData
-{
-	int instruction;
-	int length;
-	byte data[DATA_LENGTH];
-} SocketData;
+
+typedef struct DataGram
+{	
+	int Type;
+	int DataLength;
+	byte Data[DATA_LENGTH];
+
+	//1 client->server i2c data
+	//2 server->client i2c data require
+	//3 ---
+	//4 server->client pwm set
+	//5 ---
+	//6 server->client i2c data stop
+
+	//i2c data: (ax ay az)(gx gy gz)
+	//pwm data: (num period duty)
+
+} DataGram;
 
 
 bool InitializeLink(Address, SOCKET*);
-bool Send(string, SOCKET);
-bool Recieve(string&, int, SOCKET);
+bool Send(DataGram, SOCKET);
+bool Recieve(DataGram&, SOCKET);
 void CloseLink(SOCKET);

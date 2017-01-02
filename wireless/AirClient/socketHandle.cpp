@@ -75,11 +75,15 @@ bool InitializeLink(Address addr, SOCKET* connectSocket)
 	return true;
 }
 
-bool Send(string message, SOCKET connectSocket)
+bool Send(DataGram gram, SOCKET connectSocket)
 {
+	byte* tmp = new byte[sizeof(gram)];
+	memcpy(tmp, &gram, sizeof(gram));
 
 	// Send an initial buffer
-	int iResult = send(connectSocket, message.c_str(), message.size(), 0);
+	int iResult = send(connectSocket, (char*)tmp, sizeof(gram), 0);
+
+	delete [] tmp;
 
 	if (iResult == SOCKET_ERROR) {
 		//printf("send failed with error: %d\n", WSAGetLastError());	
@@ -90,21 +94,19 @@ bool Send(string message, SOCKET connectSocket)
 
 }
 
-bool Recieve(string& message, int size, SOCKET connectSocket)
+bool Recieve(DataGram& gram, SOCKET connectSocket)
 {
+	int size = sizeof(DataGram);
 	byte* recvbuf = new byte[size];
 
-	int iResult = recv(connectSocket, (char*)recvbuf, size, 0);
-
+	int iResult = recv(connectSocket, (char*)recvbuf, size, 0);		
 
 	if (iResult > 0)
-	{
-		message = string((char*)recvbuf);
-		return true;
-	}
-	else
-		return false;
+		memcpy(recvbuf, &gram, sizeof(DataGram));
 
+	delete[] recvbuf;
+
+	return iResult > 0;
 }
 
 void CloseLink(SOCKET connectSocket)
