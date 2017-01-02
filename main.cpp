@@ -80,7 +80,7 @@ void* sendI2C(void* par)
 
 void process(DataGram gram)
 {
-	int inst = gra.Type;
+	int inst = gram.Type;
 
 	switch(inst)
 	{
