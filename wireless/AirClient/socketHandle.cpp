@@ -96,15 +96,19 @@ bool Send(DataGram gram, SOCKET connectSocket)
 
 bool Recieve(DataGram& gram, SOCKET connectSocket)
 {
+	puts("recv start.");
+
 	int size = sizeof(DataGram);
 	byte* recvbuf = new byte[size];
 
 	int iResult = recv(connectSocket, (char*)recvbuf, size, 0);		
 
+	puts("recv end.");
+
 	if (iResult > 0)
 		memcpy(recvbuf, &gram, sizeof(DataGram));
 
-	delete[] recvbuf;
+	delete [] recvbuf;
 
 	return iResult > 0;
 }
