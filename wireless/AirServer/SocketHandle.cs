@@ -186,7 +186,7 @@ namespace AirServer.MySocket
                         case 1:
                             Int16[] data = new short[6];
                             for (int i = 0; i != 6; ++i)
-                                BitConverter.ToInt16(_Temp.Data, i * sizeof(Int16));
+                                data[i] = BitConverter.ToInt16(_Temp.Data, i * sizeof(Int16));
 
                             Console.WriteLine(
                                 "ax={0} ay={1} az={2} , gx={3} gy={4} gz={5}",
