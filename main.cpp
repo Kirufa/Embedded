@@ -110,10 +110,17 @@ void process(DataGram gram)
 
 			break;
 		case 4: //pwm set
-			byte num,var,value;
-			memcpy(&var, gram.Data, sizeof(byte));
-			memcpy(&num, &gram.Data[1], sizeof(byte));
-			memcpy(&value, &gram.Data[2], sizeof(byte));
+			int num, var, value, index;
+			index = 0;
+			
+			memcpy(&var, &gram.Data[index], sizeof(int));
+			index += sizeof(int);
+
+			memcpy(&num, &gram.Data[index], sizeof(int));
+			index += sizeof(int);
+
+			memcpy(&value, &gram.Data[index], sizeof(int));
+			index += sizeof(int);
 
 			printf("var=%d num=%d value=%d\n", var, num, value);
 

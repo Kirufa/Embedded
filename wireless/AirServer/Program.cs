@@ -110,7 +110,7 @@ namespace AirServer.Main
 
                     int value, num;
 
-                    if (par[0] != "-p" && par[1] != "-d" && par[1] != "-r")
+                    if (par[0] != "-p" && par[0] != "-d" && par[0] != "-r")
                     {
                         processInst(Instruction.None);
                         break;
@@ -132,12 +132,12 @@ namespace AirServer.Main
 
                     int index = 0;
 
-                    if (par[1] == "-p")
+                    if (par[0] == "-p")
                         Array.Copy(BitConverter.GetBytes((int)2), 0, gram.Data, index, sizeof(int));
-                    else if (par[1] == "-d")
+                    else if (par[0] == "-d")
                         Array.Copy(BitConverter.GetBytes((int)1), 0, gram.Data, index, sizeof(int));
-                    else if (par[1] == "-r")
-                        Array.Copy(BitConverter.GetBytes((int)2), 0, gram.Data, index, sizeof(int));
+                    else if (par[0] == "-r")
+                        Array.Copy(BitConverter.GetBytes((int)0), 0, gram.Data, index, sizeof(int));
                     index += sizeof(int);
 
                     Array.Copy(BitConverter.GetBytes(num), 0, gram.Data, index, sizeof(int));
