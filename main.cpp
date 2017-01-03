@@ -1,6 +1,7 @@
 #include <socketHandle.h>
 #include <BBB_I2C.h>
 #include <MPU6050.h>
+#include <pwm.h>
 
 #include <iostream>
 #include <cstdio>
@@ -12,6 +13,7 @@ using namespace std;
 
 MPU6050 MPU;
 BBB_I2C BBB_I2C;
+PWM pwm;
 SOCKET ep;
 pthread_t* thread;
 
@@ -43,6 +45,8 @@ int main()
 		exit(1);
 	}
 	puts("Wireless network initialize successful.");
+
+	
 
 	while(run)
 	{
