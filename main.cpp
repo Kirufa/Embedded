@@ -115,6 +115,8 @@ void process(DataGram gram)
 			memcpy(&num, &gram.Data[1], sizeof(byte));
 			memcpy(&value, &gram.Data[2], sizeof(byte));
 
+			printf("var=%d num=%d value=%d\n", var, num, value);
+
 			if(var == 0)
 				pwm.SetValue(num, "run", value);
 			if(var == 1)

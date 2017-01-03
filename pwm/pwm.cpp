@@ -56,14 +56,17 @@ bool PWM::Initialize()
 
 	if(!findString(vs, "am33xx_pwm"))
 		system("sudo echo am33xx_pwm > /sys/devices/bone_capemgr.9/slots");
-	
-	string fileName = "bone_pwm_";
 
+
+	string fileName = "bone_pwm_";
+	
 	for(int i = 0; i != 4; ++i)
 	{
 		if(!findString(vs ,fileName + pin[i]))
+		{
+			system(("sudo echo " + pwm[i].substr(3, 1) + " > /sys/class/pwm/export").c_str());
 			system(("sudo echo " + fileName + pin[i] + " > /sys/devices/bone_capemgr.9/slots").c_str());
-	
+		}
 	}
 
 	fs.open("/sys/devices/bone_capemgr.9/slots",fstream::in | fstream::out);
