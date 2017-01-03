@@ -1,1 +1,1 @@
-# Imbedded
+# Embedded
