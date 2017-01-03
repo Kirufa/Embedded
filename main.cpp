@@ -81,7 +81,7 @@ void* sendI2C(void* par)
 
 		Send(gram,ep);
 
-		usleep(500);
+		usleep(500000);
 	}
 
 }
