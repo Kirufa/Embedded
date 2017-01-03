@@ -62,7 +62,7 @@ namespace AirServer.Main
                     break;
 
                 case "pwm":
-                    if (!(strs.Length != 4))
+                    if (strs.Length != 4)
                     {
                         inst = Instruction.None;
                         break;
@@ -108,37 +108,43 @@ namespace AirServer.Main
                     break;
                 case Instruction.PWMSet:
 
-                    byte value,num;
+                    int value, num;
 
-                    if (par[1] != "-p" || par[1] != "-d" || par[1] != "-r")
+                    if (par[0] != "-p" && par[1] != "-d" && par[1] != "-r")
                     {
                         processInst(Instruction.None);
                         break;
                     }
 
-                    if (!byte.TryParse(par[2], out num))
+                    if (!int.TryParse(par[1], out num))
                     {
                         processInst(Instruction.None);
                         break;
                     }
 
-                    if (!byte.TryParse(par[3],out value))
+                    if (!int.TryParse(par[2],out value))
                     {
                         processInst(Instruction.None);
                         break;
                     }
                     
                     gram.Type = 4;
-                 
-                    if(par[1] == "-p")
-                        gram.Data[0] = 2;
-                    else if(par[1] == "-d")
-                        gram.Data[0] = 1;
-                    else if (par[1] == "-r")
-                        gram.Data[0] = 0;
 
-                    gram.Data[1] = num;
-                    gram.Data[2] = value;
+                    int index = 0;
+
+                    if (par[1] == "-p")
+                        Array.Copy(BitConverter.GetBytes((int)2), 0, gram.Data, index, sizeof(int));
+                    else if (par[1] == "-d")
+                        Array.Copy(BitConverter.GetBytes((int)1), 0, gram.Data, index, sizeof(int));
+                    else if (par[1] == "-r")
+                        Array.Copy(BitConverter.GetBytes((int)2), 0, gram.Data, index, sizeof(int));
+                    index += sizeof(int);
+
+                    Array.Copy(BitConverter.GetBytes(num), 0, gram.Data, index, sizeof(int));
+                    index += sizeof(int);
+
+                    Array.Copy(BitConverter.GetBytes(value), 0, gram.Data, index, sizeof(int));
+                    index += sizeof(int);
 
                     SocketData.Client[0].TCPSend(gram);
                     break;
