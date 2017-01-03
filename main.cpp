@@ -46,7 +46,11 @@ int main()
 	}
 	puts("Wireless network initialize successful.");
 
-	
+	if(!pwm.initialize())
+	{
+		puts("pwm initialize fail!\n");
+		exit(1);
+	}
 
 	while(run)
 	{
@@ -105,6 +109,18 @@ void process(DataGram gram)
 
 			break;
 		case 4: //pwm set
+			byte num,var,value;
+			memcpy(var, gram.Data, sizeof(byte));
+			memcpy(num, &gram.Data[1], sizeof(byte));
+			memcpy(value, &gram.Data[2], sizeof(byte));
+
+			if(var == 0)
+				pwm.SetValue(num, "run", value);
+			if(var == 1)
+				pwm.SetValue(num, "duty_ns", value);
+			if(var == 2)
+				pwm.SetValue(num, "period_ns", value);
+			
 
 			break;
 		case 6:	//i2c data stop
