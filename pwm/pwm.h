@@ -1,5 +1,5 @@
 #include <string>
-#include <fstream>
+#include <vector>
 
 using namespace std;
 
@@ -14,7 +14,7 @@ public:
 
 private:
 	bool inited;
-	bool findString(fstream&, string);
+	bool findString(vector<string>, string);
 	string itos(int);
 
 	string pwm[4];

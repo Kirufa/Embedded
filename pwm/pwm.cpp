@@ -2,9 +2,9 @@
 #include <cstdlib>
 #include <string>
 #include <sstream>
+#include <vector>
 
 #include "pwm.h"
-
 
 PWM::PWM()
 {
@@ -27,7 +27,7 @@ PWM::PWM()
 bool PWM::findString(vector<string> vs,string str)
 {
 	for(int i = 0; i != vs.size(); ++i)
-
+	{
 		//puts(tmp.c_str());
 
 		if(vs[i].find(str) != string::npos)

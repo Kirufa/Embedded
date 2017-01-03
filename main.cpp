@@ -39,18 +39,19 @@ int main()
 	}
 	puts("MPU6050 initialize successful.");
 
-	if(!InitializeLink(Address("192.168.1.101", "61357"), &ep))
+	if(!pwm.Initialize())
+	{
+		puts("pwm initialize fail!\n");
+		exit(1);
+	}
+	puts("PWM initialize successful");
+
+	if(!InitializeLink(Address("192.168.1.105", "61357"), &ep))
 	{
 		printf("Wireless network initialize fail!\n");
 		exit(1);
 	}
 	puts("Wireless network initialize successful.");
-
-	if(!pwm.initialize())
-	{
-		puts("pwm initialize fail!\n");
-		exit(1);
-	}
 
 	while(run)
 	{
@@ -110,9 +111,9 @@ void process(DataGram gram)
 			break;
 		case 4: //pwm set
 			byte num,var,value;
-			memcpy(var, gram.Data, sizeof(byte));
-			memcpy(num, &gram.Data[1], sizeof(byte));
-			memcpy(value, &gram.Data[2], sizeof(byte));
+			memcpy(&var, gram.Data, sizeof(byte));
+			memcpy(&num, &gram.Data[1], sizeof(byte));
+			memcpy(&value, &gram.Data[2], sizeof(byte));
 
 			if(var == 0)
 				pwm.SetValue(num, "run", value);
