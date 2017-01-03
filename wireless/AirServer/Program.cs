@@ -9,6 +9,7 @@ namespace AirServer.Main
     class Program
     {
         static bool runningFlag = true;
+        static List<string> par;
 
         static void Main(string[] args)
         {
@@ -20,7 +21,7 @@ namespace AirServer.Main
             while (runningFlag)
             {
                 Console.WriteLine("Waiting instruction...");
-                str = Console.ReadLine();
+                str = Console.ReadLine();               
 
                 Instruction inst = parseStr(str);
                 processInst(inst);
@@ -34,12 +35,15 @@ namespace AirServer.Main
             Instruction inst;
 
             str = str.ToLower();
+            string[] strs = str.Split(new char[] { ' ' });
+            str = strs[0];
 
             switch(str)
             {              
                 case "ini":
                 case "initialize":
                 case "initial":
+                case "init":
                     inst = Instruction.Initialize;
                     break;
 
@@ -56,7 +60,24 @@ namespace AirServer.Main
                 default:
                     inst = Instruction.None;
                     break;
-                    
+
+                case "pwm":
+                    if (!(strs.Length != 4))
+                    {
+                        inst = Instruction.None;
+                        break;
+                    }
+                    else
+                    {
+                        par = new List<string>();
+                        par.Add(strs[1]);
+                        par.Add(strs[2]);
+                        par.Add(strs[3]);
+                        inst = Instruction.PWMSet;
+                        break;
+                    }
+
+                   
 
 
             }
@@ -85,6 +106,42 @@ namespace AirServer.Main
                     gram.Type = 6;
                     SocketData.Client[0].TCPSend(gram);
                     break;
+                case Instruction.PWMSet:
+
+                    byte value,num;
+
+                    if (par[1] != "-p" || par[1] != "-d" || par[1] != "-r")
+                    {
+                        processInst(Instruction.None);
+                        break;
+                    }
+
+                    if (!byte.TryParse(par[2], out num))
+                    {
+                        processInst(Instruction.None);
+                        break;
+                    }
+
+                    if (!byte.TryParse(par[3],out value))
+                    {
+                        processInst(Instruction.None);
+                        break;
+                    }
+                    
+                    gram.Type = 4;
+                 
+                    if(par[1] == "-p")
+                        gram.Data[0] = 2;
+                    else if(par[1] == "-d")
+                        gram.Data[0] = 1;
+                    else if (par[1] == "-r")
+                        gram.Data[0] = 0;
+
+                    gram.Data[1] = num;
+                    gram.Data[2] = value;
+
+                    SocketData.Client[0].TCPSend(gram);
+                    break;
                 default:
                 case Instruction.None:
                     Console.WriteLine("Error string.");
@@ -100,7 +157,8 @@ namespace AirServer.Main
         None,
         End,
         StartI2C,
-        EndI2C
+        EndI2C,
+        PWMSet            
     }
     
 }

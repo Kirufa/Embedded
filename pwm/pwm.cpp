@@ -24,19 +24,14 @@ PWM::PWM()
 
 
 
-bool PWM::findString(fstream& fs,string str)
+bool PWM::findString(vector<string> vs,string str)
 {
-
-	string tmp;
-
-	while(fs>>tmp)
-	{	
+	for(int i = 0; i != vs.size(); ++i)
 
 		//puts(tmp.c_str());
 
-		if(tmp.find(str) != string::npos)
+		if(vs[i].find(str) != string::npos)
 			return true;
-
 	}
 
 	return false;
@@ -47,26 +42,50 @@ bool PWM::findString(fstream& fs,string str)
 
 bool PWM::Initialize()
 {
+	inited = true;
+
 	fstream fs("/sys/devices/bone_capemgr.9/slots",fstream::in | fstream::out);
 	
-	if(!findString(fs, "am33xx_pwm"))
-		system("sudo echo am33xx_pwm > /sys/devices/bone_capemgr.9/slots");
-	else
-		return false;
+	string tmp;
+	vector<string> vs;
 
+	while(fs>>tmp)
+		vs.push_back(tmp);
+	
+	fs.close();
+
+	if(!findString(vs, "am33xx_pwm"))
+		system("sudo echo am33xx_pwm > /sys/devices/bone_capemgr.9/slots");
+	
 	string fileName = "bone_pwm_";
 
 	for(int i = 0; i != 4; ++i)
 	{
-		if(!findString(fs ,fileName + pin[i]))
+		if(!findString(vs ,fileName + pin[i]))
 			system(("sudo echo " + fileName + pin[i] + " > /sys/devices/bone_capemgr.9/slots").c_str());
-		else
-			return false;
+	
 	}
 
-	inited = true;
+	fs.open("/sys/devices/bone_capemgr.9/slots",fstream::in | fstream::out);
 
-	return true;
+	vs.clear();
+
+	while(fs>>tmp)
+		vs.push_back(tmp);
+
+	if(!findString(vs, "am33xx_pwm"))
+		inited = false;
+
+	for(int i = 0; i != 4; ++i)
+	{
+		if(!findString(vs ,fileName + pin[i]))
+		{
+			inited = false;
+			break;
+		}
+	}
+
+	return inited;
 }
 
 string PWM::itos(int i)

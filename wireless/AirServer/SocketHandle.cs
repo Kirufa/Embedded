@@ -20,7 +20,7 @@ namespace AirServer.MySocket
         public int Type;
         public int DataLength;
         public byte[] Data = new byte[SocketData.MAX_DATASIZE];
-        
+
         //1 client->server i2c data
         //2 server->client i2c data require
         //3 ---
@@ -29,7 +29,8 @@ namespace AirServer.MySocket
         //6 server->client i2c data stop
 
         //i2c data: (ax ay az)(gx gy gz)
-        //pwm data: (num period duty)     
+        //pwm data: (var num value)
+        //variable: 0:run 1:duty 2:period     
     }
 
     public static class SocketData
