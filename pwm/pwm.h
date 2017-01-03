@@ -6,7 +6,7 @@ using namespace std;
 class PWM
 {
 public:
-	PWM():inited(false){}
+	PWM();
 
 	bool Initialize();
 	void SetValue(int, string, int);
@@ -17,8 +17,8 @@ private:
 	bool findString(fstream&, string);
 	string itos(int);
 
-	string pwm[] = { "pwm0", "pwm3", "pwm5", "pwm2" }; 
-	string pin[] = { "P9_22", "P9_14", "P8_19", "P9_42"};
+	string pwm[4]; 
+	string pin[4];
 
 //         front
 //           0                

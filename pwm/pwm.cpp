@@ -6,6 +6,20 @@
 #include "pwm.h"
 
 
+PWM::PWM()
+{
+	inited = false;
+	pwm[0] = "pwm0";
+	pwm[1] = "pwm3";
+	pwm[2] = "pwm5";
+	pwm[3] = "pwm2";
+
+	pin[0] = "P9_22";
+	pin[1] = "P9_14";
+	pin[2] = "P8_19";
+	pin[3] = "P9_42";
+}
+
 bool PWM::Initialize()
 {
 	fstream fs("/sys/devices/bone_capemgr.9/slots",fstream::in | fstream::out);
