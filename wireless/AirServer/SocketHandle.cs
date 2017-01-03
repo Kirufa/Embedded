@@ -59,7 +59,7 @@ namespace AirServer.MySocket
 
             //other
             private int ListenCount = MAX_LISTEN_SIZE;
-            public static string ServerIP = "192.168.1.101";
+            public static string ServerIP = "192.168.1.105";
             private bool AcceptRunning = true;
 
 
